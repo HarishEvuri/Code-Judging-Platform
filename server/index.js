@@ -1,13 +1,23 @@
-import User from "./models/userModel.js";
+import express from "express";
+import cors from "cors";
+import cookieParser from "cookie-parser";
 
-const user = new User({
-  username: "harishevuri2",
-  firstName: "Harish",
-  lastName: "Evuri",
-  emailAddress: "harishevuri@gmail.com",
-});
+import userRoutes from "./routes/userRoutes.js";
+import problemRoutes from "./routes/problemRoutes.js";
 
-User.create(user, (err, data) => {
-  if (err) console.log(err.message);
-  else console.log(data);
-});
+const app = express();
+const PORT = process.env.PORT || 5000;
+
+app.use(express.json());
+app.use(cookieParser());
+app.use(
+  cors({
+    origin: ["http://localhost:3000"],
+    credentials: true,
+  })
+);
+
+app.use("/user", userRoutes);
+app.use("/problem", problemRoutes);
+
+app.listen(PORT, () => console.log("Server is listening at Port : ", PORT));
