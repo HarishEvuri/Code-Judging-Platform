@@ -50,6 +50,7 @@ export const register = async (req, res) => {
     lastName,
     emailAddress,
     dob,
+    type: 0,
   });
 
   try {

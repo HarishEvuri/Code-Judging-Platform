@@ -9,6 +9,7 @@ class User {
     this.emailAddress = user.emailAddress;
     this.dob = user.dob;
     this.avatar = user.avatar;
+    this.type = user.type;
   }
 
   static create(newUser) {
