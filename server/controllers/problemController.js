@@ -1,6 +1,6 @@
-import Problem from "../models/problemModel";
+import Problem from "../models/problemModel.js";
 
-export const create = (req, res) => {
+export const create = async (req, res) => {
   const creatorId = req.userId;
 
   const {
@@ -14,8 +14,8 @@ export const create = (req, res) => {
     difficulty,
   } = req.body;
 
-  if(!title || !timeLimit || !memoryLimit || !difficulty)
-  return res
+  if (!title || !timeLimit || !memoryLimit || !difficulty)
+    return res
       .status(404)
       .json({ message: "Please Enter all required fields!" });
 
@@ -30,17 +30,16 @@ export const create = (req, res) => {
     difficulty,
     submissionsCount: 0,
     acceptedCount: 0,
-    creatorId
-  })
+    creatorId,
+  });
 
   const savedProblem = await newProblem.save();
 
   res.status(201).json(savedProblem);
 };
 
-
-export const get = async(req, res) => {
-  const {id} = req.params;
+export const get = async (req, res) => {
+  const { id } = req.params;
 
   try {
     const problem = await Problem.findById(id);
@@ -48,9 +47,9 @@ export const get = async(req, res) => {
   } catch (error) {
     res.status(403).json({ message: error.message });
   }
-}
+};
 
-export const update = async(req, res) => {
+export const update = async (req, res) => {
   const creatorId = req.userId;
   const { id } = req.params;
 
@@ -73,11 +72,11 @@ export const update = async(req, res) => {
   const problem = await Problem.findById(id);
   if (!problem)
     return res.status(404).json({ message: `No Problem with the given id!` });
-  
+
   if (problem.creatorId !== creatorId)
-  return res
-    .status(404)
-    .json({ message: `You have no access to this problem!` });
+    return res
+      .status(404)
+      .json({ message: `You have no access to this problem!` });
 
   problem.title = title;
   problem.body = body;
@@ -88,9 +87,9 @@ export const update = async(req, res) => {
 
   await problem.save();
   return res.status(201).json(problem);
-}
+};
 
-export const remove = (req, res) => {
+export const remove = async (req, res) => {
   const creatorId = req.userId;
   const { id } = req.params;
 
@@ -99,10 +98,10 @@ export const remove = (req, res) => {
     return res.status(203).json({ message: `No Problem with the given id!` });
 
   if (problem.creatorId !== creatorId)
-  return res
-    .status(404)
-    .json({ message: `You have no access to this problem!` });
+    return res
+      .status(404)
+      .json({ message: `You have no access to this problem!` });
 
   await problem.delete();
   res.send();
-}
+};
