@@ -6,7 +6,7 @@ const auth = (req, res, next) => {
     if (!token) return res.json({ message: "You are Unauthorized!" });
 
     const verified = jwt.verify(token, process.env.JWT_SECRET);
-    req.username = verified.username;
+    req.userId = verified.userId;
 
     next();
   } catch (err) {

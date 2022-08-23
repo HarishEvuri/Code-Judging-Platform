@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-import User from "../models/userModel.js";
+import User from "../models/userModel";
 
 export const register = async (req, res) => {
   const {
@@ -10,19 +10,11 @@ export const register = async (req, res) => {
     lastName,
     password,
     confirmPassword,
-    emailAddress,
+    email,
     dob,
   } = req.body;
 
-  if (
-    !username ||
-    !firstName ||
-    !lastName ||
-    !password ||
-    !confirmPassword ||
-    !emailAddress ||
-    !dob
-  )
+  if (!username || !password || !confirmPassword || !email)
     return res
       .status(404)
       .json({ message: "Please Enter all required fields!" });
@@ -35,10 +27,17 @@ export const register = async (req, res) => {
   if (password !== confirmPassword)
     return res.status(404).json({ message: "Passwords do not match!" });
 
-  try {
-    await User.findByEmail(emailAddress);
-    return res.status(404).json({ message: "Email already exits!" });
-  } catch (err) {}
+  const existingUser = await User.findOne({ username });
+  if (existingUser)
+    return res.status(404).json({
+      message: "Username already exists!",
+    });
+
+  const existingEmail = await User.findOne({ email });
+  if (existingEmail)
+    return res.status(404).json({
+      message: "Email already exists!",
+    });
 
   const salt = await bcrypt.genSalt();
   const passwordHash = await bcrypt.hash(password, salt);
@@ -48,26 +47,21 @@ export const register = async (req, res) => {
     passwordHash,
     firstName,
     lastName,
-    emailAddress,
+    email,
     dob,
-    type: 0,
   });
 
-  try {
-    const data = await User.create(newUser);
-    const token = jwt.sign({ username }, process.env.JWT_SECRET);
-    return res
-      .status(201)
-      .cookie("token", token, {
-        httpOnly: true,
-        maxAge: 604800000,
-      })
-      .json(data);
-  } catch (err) {
-    if (err.code === "ER_DUP_ENTRY")
-      return res.status(404).json({ message: "Username already exists!" });
-    else return res.status(500).json({ message: err.message });
-  }
+  const savedUser = await newUser.save();
+
+  const token = jwt.sign({ userId: savedUser._id }, process.env.JWT_SECRET);
+
+  res
+    .status(201)
+    .cookie("token", token, {
+      httpOnly: true,
+      maxAge: 604800000,
+    })
+    .json(savedUser);
 };
 
 export const login = async (req, res) => {
@@ -78,22 +72,28 @@ export const login = async (req, res) => {
       .status(404)
       .json({ message: "Please Enter all required fields!" });
 
-  try {
-    const user = await User.findByUsername(username);
-    const passwordCorrect = await bcrypt.compare(password, user.passwordHash);
-    if (!passwordCorrect)
-      return res.status(404).json({ message: "Invalid Credentials!" });
-    const token = jwt.sign({ username }, process.env.JWT_SECRET);
-    return res
-      .status(201)
-      .cookie("token", token, {
-        httpOnly: true,
-        maxAge: 604800000,
-      })
-      .json(user);
-  } catch (err) {
-    return res.status(404).json({ message: "Invalid Credentials!" });
-  }
+  const existingUser = await User.findOne({ username });
+
+  if (!existingUser)
+    return res.status(404).json({ message: "Invalid credentials!" });
+
+  const passwordCorrect = await bcrypt.compare(
+    password,
+    existingUser.passwordHash
+  );
+
+  if (!passwordCorrect)
+    return res.status(404).json({ message: "Invalid credentials!" });
+
+  const token = jwt.sign({ userId: existingUser._id }, process.env.JWT_SECRET);
+
+  res
+    .status(201)
+    .cookie("token", token, {
+      httpOnly: true,
+      maxAge: 604800000,
+    })
+    .json(existingUser);
 };
 
 export const logout = async (req, res) => {
@@ -107,21 +107,15 @@ export const logout = async (req, res) => {
 };
 
 export const update = async (req, res) => {
-  const username = req.username;
+  const userId = req.userId;
 
-  const { firstName, lastName, emailAddress, dob, avatar } = req.body;
+  const existingUser = await User.findById(userId);
+  existingUser.firstName = req.body.firstName;
+  existingUser.lastName = req.body.lastName;
+  existingUser.dob = req.body.dob;
+  existingUser.avatar = req.body.avatar;
 
-  try {
-    const data = await User.update({
-      firstName,
-      lastName,
-      emailAddress,
-      dob,
-      avatar,
-      username,
-    });
-    return res.status(201).json(data);
-  } catch (err) {
-    return res.status(404).json({ message: err.message });
-  }
+  existingUser.save();
+
+  res.status(201).json(existingUser);
 };

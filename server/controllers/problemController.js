@@ -1,9 +1,7 @@
-import { v4 as uuidv4 } from "uuid";
+import Problem from "../models/problemModel";
 
-import Problem from "../models/problemModel.js";
-
-export const create = async (req, res) => {
-  const creator = req.username;
+export const create = (req, res) => {
+  const creatorId = req.userId;
 
   const {
     title,
@@ -16,14 +14,12 @@ export const create = async (req, res) => {
     difficulty,
   } = req.body;
 
-  if (!title || !timeLimit || !memoryLimit || !difficulty)
-    return res
+  if(!title || !timeLimit || !memoryLimit || !difficulty)
+  return res
       .status(404)
       .json({ message: "Please Enter all required fields!" });
 
-  const id = uuidv4();
   const newProblem = new Problem({
-    id,
     title,
     body,
     tags,
@@ -34,29 +30,28 @@ export const create = async (req, res) => {
     difficulty,
     submissionsCount: 0,
     acceptedCount: 0,
-    creator,
-  });
+    creatorId
+  })
 
-  try {
-    const data = await Problem.create(newProblem);
-    return res.status(201).json(data);
-  } catch (err) {
-    return res.status(500).json({ message: err.message });
-  }
+  const savedProblem = await newProblem.save();
+
+  res.status(201).json(savedProblem);
 };
 
-export const get = async (req, res) => {
-  const { id } = req.params;
+
+export const get = async(req, res) => {
+  const {id} = req.params;
+
   try {
     const problem = await Problem.findById(id);
-    return res.status(201).json(problem);
-  } catch (err) {
-    return res.status(404).json({ message: err.message });
+    res.status(200).json(problem);
+  } catch (error) {
+    res.status(403).json({ message: error.message });
   }
-};
+}
 
-export const update = async (req, res) => {
-  const creator = req.username;
+export const update = async(req, res) => {
+  const creatorId = req.userId;
   const { id } = req.params;
 
   const {
@@ -75,48 +70,39 @@ export const update = async (req, res) => {
       .status(404)
       .json({ message: "Please Enter all required fields!" });
 
-  try {
-    const problem = await Problem.findById(id);
-    if (problem.creator !== creator)
-      return res.status(404).json({ message: "You do not have access!" });
-  } catch (err) {
-    return res.status(404).json({ message: err.message });
-  }
+  const problem = await Problem.findById(id);
+  if (!problem)
+    return res.status(404).json({ message: `No Problem with the given id!` });
+  
+  if (problem.creatorId !== creatorId)
+  return res
+    .status(404)
+    .json({ message: `You have no access to this problem!` });
 
-  try {
-    const data = await Problem.update({
-      id,
-      title,
-      body,
-      tags,
-      sampleTests,
-      mainTests,
-      timeLimit,
-      memoryLimit,
-      difficulty,
-    });
-    return res.status(201).json(data);
-  } catch (err) {
-    return res.status(404).json({ message: err.message });
-  }
-};
+  problem.title = title;
+  problem.body = body;
+  problem.tags = tags;
+  problem.sampleTests = sampleTests;
+  problem.mainTests = mainTests;
+  problem.difficulty = difficulty;
 
-export const remove = async (req, res) => {
-  const creator = req.username;
+  await problem.save();
+  return res.status(201).json(problem);
+}
+
+export const remove = (req, res) => {
+  const creatorId = req.userId;
   const { id } = req.params;
 
-  try {
-    const problem = await Problem.findById(id);
-    if (problem.creator !== creator)
-      return res.status(404).json({ message: "You do not have access!" });
-  } catch (err) {
-    return res.status(404).json({ message: err.message });
-  }
+  const problem = await Problem.findById(id);
+  if (!problem)
+    return res.status(203).json({ message: `No Problem with the given id!` });
 
-  try {
-    const data = await Problem.remove(id);
-    return res.status(201).json(data);
-  } catch (err) {
-    return res.status(404).json({ message: err.message });
-  }
-};
+  if (problem.creatorId !== creatorId)
+  return res
+    .status(404)
+    .json({ message: `You have no access to this problem!` });
+
+  await problem.delete();
+  res.send();
+}

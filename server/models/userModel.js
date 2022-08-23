@@ -1,93 +1,21 @@
-import sql from "../config/database.js";
+import mongoose from "mongoose";
 
-class User {
-  constructor(user) {
-    this.username = user.username;
-    this.passwordHash = user.passwordHash;
-    this.firstName = user.firstName;
-    this.lastName = user.lastName;
-    this.emailAddress = user.emailAddress;
-    this.dob = user.dob;
-    this.avatar = user.avatar;
-    this.type = user.type;
+const userSchema = new mongoose.Schema(
+  {
+    username: { type: String, required: true, index: true },
+    firstName: { type: String },
+    lastName: { type: String },
+    email: { type: String, required: true },
+    passwordHash: { type: String, required: true },
+    avatar: { type: String },
+    dob: { type: Date },
+    solvedProblems: { type: Array, default: [] },
+  },
+  {
+    timestamps: { createdAt: true },
   }
+);
 
-  static create(newUser) {
-    return new Promise((resolve, reject) => {
-      sql.query("INSERT INTO users SET ?", newUser, (err, res) => {
-        if (err) return reject(err);
-        else return resolve({ ...newUser });
-      });
-    });
-  }
-
-  static findByUsername(username) {
-    return new Promise((resolve, reject) => {
-      sql.query(
-        "SELECT * FROM users WHERE username = ?",
-        username,
-        (err, res) => {
-          if (err) return reject(err);
-          else if (res.length == 0)
-            return reject({ message: "User not found!" });
-          else return resolve(res[0]);
-        }
-      );
-    });
-  }
-
-  static findByEmail(emailAddress) {
-    return new Promise((resolve, reject) => {
-      sql.query(
-        "SELECT * FROM users WHERE emailAddress = ?",
-        emailAddress,
-        (err, res) => {
-          if (err) return reject(err);
-          else if (res.length == 0)
-            return reject({ message: "User not found!" });
-          else return resolve(res[0]);
-        }
-      );
-    });
-  }
-
-  static update = (user) => {
-    return new Promise((resolve, reject) => {
-      console.log(user.username);
-      sql.query(
-        "UPDATE users SET firstName = ?, lastName = ?, emailAddress = ?, dob = ?, avatar = ? WHERE username = ?",
-        [
-          user.firstName,
-          user.lastName,
-          user.emailAddress,
-          user.dob,
-          user.avatar,
-          user.username,
-        ],
-        (err, res) => {
-          if (err) return reject(err);
-          else if (res.affectedRows == 0)
-            return reject({ message: "User not found!" });
-          else return resolve({ ...user });
-        }
-      );
-    });
-  };
-
-  static remove = (username) => {
-    return new Promise((resolve, reject) => {
-      sql.query(
-        "DELETE FROM users WHERE username = ?",
-        username,
-        (err, res) => {
-          if (err) return reject(err);
-          else if (res.affectedRows == 0)
-            return reject({ message: "User not found!" });
-          else return resolve(res);
-        }
-      );
-    });
-  };
-}
+const User = mongoose.model("User", userSchema);
 
 export default User;
