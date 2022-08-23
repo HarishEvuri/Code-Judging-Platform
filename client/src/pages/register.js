@@ -45,6 +45,14 @@ const Register = () => {
             margin="dense"
             required
             fullWidth
+            name="email"
+            label="Email Address"
+            type="email"
+          />
+          <TextField
+            margin="dense"
+            required
+            fullWidth
             name="password"
             label="Password"
             type="password"
@@ -56,14 +64,6 @@ const Register = () => {
             name="confirmPassword"
             label="Confirm Password"
             type="password"
-          />
-          <TextField
-            margin="dense"
-            required
-            fullWidth
-            name="emailAddress"
-            label="Email Address"
-            type="email"
           />
 
           <Button type="submit" fullWidth variant="contained" sx={{ my: 2 }}>

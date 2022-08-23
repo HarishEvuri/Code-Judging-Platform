@@ -47,7 +47,7 @@ const ProblemsFilter = () => {
         <Typography>Filter</Typography>
         <FilterAlt />
       </Box>
-      <FormControl fullWidth size="small" sx={{ mt: 2 }}>
+      <FormControl fullWidth size="small" sx={{ mt: 3 }}>
         <InputLabel id="demo-multiple-chip-label">Tags</InputLabel>
         <Select
           labelId="demo-multiple-chip-label"
