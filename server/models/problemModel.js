@@ -11,6 +11,7 @@ const problemSchema = new mongoose.Schema({
   difficulty: { type: Number },
   submissionsCount: { type: Number, default: 0 },
   acceptedCount: { type: Number, default: 0 },
+  acceptance: { type: Number, default: 0 },
   creatorId: { type: String, required: true },
 });
 

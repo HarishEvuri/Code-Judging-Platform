@@ -1,5 +1,32 @@
 import Problem from "../models/problemModel.js";
 
+export const getAll = async (req, res) => {
+  const { search, tags, orderBy, order, page, limit } = req.query;
+
+  const LIMIT = Number(limit) || 50;
+  const startIndex = (Number(page) - 1) * LIMIT;
+
+  try {
+    const title = new RegExp(search, "i");
+    const total = await Problem.countDocuments({});
+    const problems = await Problem.find({
+      $and: [{ title }, { tags: { $all: tags?.split(",") || [] } }],
+    })
+      .select(["_id", "title", "difficulty", "tags", "acceptance"])
+      .sort([[orderBy, Number(order)]])
+      .limit(LIMIT)
+      .skip(startIndex);
+
+    res.status(201).json({
+      data: problems,
+      currentPage: Number(page),
+      numberOfPages: Math.ceil(total / LIMIT),
+    });
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
+
 export const create = async (req, res) => {
   const creatorId = req.userId;
 
