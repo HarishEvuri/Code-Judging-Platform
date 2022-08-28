@@ -43,56 +43,12 @@ const headCells = [
   },
 ];
 
-const rows = [
-  {
-    title: "1338. Reduce Array size to the half",
-    acceptance: "70.0%",
-    difficulty: "Medium",
-  },
-  {
-    title: "2356. Number of unique subjects",
-    acceptance: "95.0%",
-    difficulty: "Easy",
-  },
-  {
-    title: "1265. Print the immutable Linked list",
-    acceptance: "94.3%",
-    difficulty: "Medium",
-  },
-  {
-    title: "1757. Recyclable and low fat products",
-    acceptance: "94.0%",
-    difficulty: "Easy",
-  },
-  {
-    title: "1338. Reduce Array size to the half",
-    acceptance: "70.0%",
-    difficulty: "Medium",
-  },
-  {
-    title: "2356. Number of unique subjects",
-    acceptance: "95.0%",
-    difficulty: "Easy",
-  },
-  {
-    title: "1265. Print the immutable Linked list",
-    acceptance: "94.3%",
-    difficulty: "Medium",
-  },
-  {
-    title: "1757. Recyclable and low fat products",
-    acceptance: "94.0%",
-    difficulty: "Easy",
-  },
-];
-
-const EnhancedTable = () => {
-  const [order, setOrder] = useState("asc");
-  const [orderBy, setOrderBy] = useState(null);
+const ProblemsTable = (props) => {
+  const { problems, order, setOrder, orderBy, setOrderBy } = props;
 
   const sortHandler = (id) => {
-    const isAsc = orderBy === id && order === "asc";
-    setOrder(isAsc ? "desc" : "asc");
+    const isAsc = orderBy === id && order === 1;
+    setOrder(isAsc ? -1 : 1);
     setOrderBy(id);
   };
 
@@ -108,7 +64,13 @@ const EnhancedTable = () => {
               >
                 <TableSortLabel
                   active={orderBy === headCell.id}
-                  direction={orderBy === headCell.id ? order : "asc"}
+                  direction={
+                    orderBy === headCell.id
+                      ? order == -1
+                        ? "desc"
+                        : "asc"
+                      : "asc"
+                  }
                   onClick={() => sortHandler(headCell.id)}
                   sx={{
                     width: "100%",
@@ -122,12 +84,12 @@ const EnhancedTable = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <StyledTableRow key={row.title}>
+          {problems.map((problem) => (
+            <StyledTableRow key={problem._id}>
               <TableCell sx={{ py: 1.5 }}></TableCell>
-              <TableCell sx={{ py: 1.5 }}>{row.title}</TableCell>
-              <TableCell sx={{ py: 1.5 }}>{row.acceptance}</TableCell>
-              <TableCell sx={{ py: 1.5 }}>{row.difficulty}</TableCell>
+              <TableCell sx={{ py: 1.5 }}>{problem.title}</TableCell>
+              <TableCell sx={{ py: 1.5 }}>{problem.acceptance}</TableCell>
+              <TableCell sx={{ py: 1.5 }}>{problem.difficulty}</TableCell>
             </StyledTableRow>
           ))}
         </TableBody>
@@ -136,4 +98,4 @@ const EnhancedTable = () => {
   );
 };
 
-export default EnhancedTable;
+export default ProblemsTable;

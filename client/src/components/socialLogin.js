@@ -1,11 +1,11 @@
 import React from "react";
 import { Avatar, Box, Divider, useTheme } from "@mui/material";
 
-import facebookLogo from "../static/images/facebook_logo.svg";
-import googleLogo from "../static/images/google_logo.svg";
-import linkedinLogo from "../static/images/linkedin_logo.svg";
-import githubLogo from "../static/images/github_logo.svg";
-import githubLogo2 from "../static/images/github_logo_2.svg";
+import facebookLogo from "../static/images/facebookLogo.svg";
+import googleLogo from "../static/images/googleLogo.svg";
+import linkedinLogo from "../static/images/linkedinLogo.svg";
+import githubLogo from "../static/images/githubLogo.svg";
+import githubLogo2 from "../static/images/githubLogo2.svg";
 
 const SocialLogin = () => {
   const theme = useTheme();

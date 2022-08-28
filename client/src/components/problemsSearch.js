@@ -27,7 +27,13 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-const ProblemsSearch = () => {
+const ProblemsSearch = (props) => {
+  const { search, setSearch } = props;
+
+  const handleChangeSearch = (event) => {
+    setSearch(event.target.value);
+  };
+
   return (
     <div style={{ display: "flex" }}>
       <Search>
@@ -37,6 +43,8 @@ const ProblemsSearch = () => {
         <StyledInputBase
           placeholder="Search…"
           inputProps={{ "aria-label": "search" }}
+          value={search}
+          onChange={handleChangeSearch}
         />
       </Search>
     </div>

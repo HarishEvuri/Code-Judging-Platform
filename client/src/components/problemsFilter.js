@@ -10,29 +10,30 @@ import {
   Select,
   Typography,
 } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
+import { tagsList } from "../constants/tagsList";
 
-const names = [
-  "Oliver",
-  "Van",
-  "April",
-  "Ralph Hubbard",
-  "Omar Alexander",
-  "Carlos Abbott",
-  "Miriam Wagner",
-  "Bradley Wilkerson",
-  "Virginia Andrews",
-  "Kelly Snyder",
-];
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: 400,
+      width: 250,
+    },
+  },
+};
 
-const ProblemsFilter = () => {
-  const [personName, setPersonName] = React.useState([]);
+const ProblemsFilter = (props) => {
+  const { tags, setTags, difficulty, setDifficulty } = props;
 
-  const handleChange = (event) => {
+  const handleChangeTags = (event) => {
     const {
       target: { value },
     } = event;
-    setPersonName(typeof value === "string" ? value.split(",") : value);
+    setTags(typeof value === "string" ? value.split(",") : value);
+  };
+
+  const handleChangeDifficulty = (event) => {
+    setDifficulty(event.target.value);
   };
 
   return (
@@ -53,20 +54,21 @@ const ProblemsFilter = () => {
           labelId="demo-multiple-chip-label"
           id="demo-multiple-chip"
           multiple
-          value={personName}
-          onChange={handleChange}
+          value={tags}
+          onChange={handleChangeTags}
           input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
           renderValue={(selected) => (
-            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
               {selected.map((value) => (
                 <Chip key={value} label={value} />
               ))}
             </Box>
           )}
+          MenuProps={MenuProps}
         >
-          {names.map((name) => (
-            <MenuItem key={name} value={name}>
-              {name}
+          {tagsList.map((tag) => (
+            <MenuItem key={tag} value={tag}>
+              {tag}
             </MenuItem>
           ))}
         </Select>
@@ -77,21 +79,13 @@ const ProblemsFilter = () => {
           labelId="demo-simple-select-label"
           id="demo-simple-select"
           label="Difficulty"
+          value={difficulty}
+          onChange={handleChangeDifficulty}
         >
-          <MenuItem value={10}>Easy</MenuItem>
-          <MenuItem value={20}>Medium</MenuItem>
-          <MenuItem value={30}>Hard</MenuItem>
-        </Select>
-      </FormControl>
-      <FormControl fullWidth sx={{ mt: 2.5 }} size="small">
-        <InputLabel id="demo-simple-select-label">Status</InputLabel>
-        <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          label="Status"
-        >
-          <MenuItem value={10}>Sovled</MenuItem>
-          <MenuItem value={20}>Unsolved</MenuItem>
+          <MenuItem value={""}>Select</MenuItem>
+          <MenuItem value={1}>Easy</MenuItem>
+          <MenuItem value={2}>Medium</MenuItem>
+          <MenuItem value={3}>Hard</MenuItem>
         </Select>
       </FormControl>
     </Paper>
