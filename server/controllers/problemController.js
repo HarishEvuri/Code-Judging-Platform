@@ -1,16 +1,24 @@
 import Problem from "../models/problemModel.js";
 
 export const getAll = async (req, res) => {
-  const { search, tags, orderBy, order, page, limit } = req.query;
+  const { search, tags, difficulty, orderBy, order, page, limit } = req.query;
 
   const LIMIT = Number(limit) || 50;
   const startIndex = (Number(page) - 1) * LIMIT;
+  console.log(search, tags, difficulty, orderBy, order, page, limit);
 
   try {
     const title = new RegExp(search, "i");
     const total = await Problem.countDocuments({});
+
+    const filterList = [];
+
+    if (title) filterList.push({ title });
+    if (tags) filterList.push({ tags: { $all: tags.split(",") } });
+    if (difficulty) filterList.push({ difficulty });
+
     const problems = await Problem.find({
-      $and: [{ title }, { tags: { $all: tags?.split(",") || [] } }],
+      $and: filterList,
     })
       .select(["_id", "title", "difficulty", "tags", "acceptance"])
       .sort([[orderBy, Number(order)]])
