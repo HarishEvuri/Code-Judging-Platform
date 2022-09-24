@@ -18,6 +18,7 @@ const submissionSchema = new Schema({
   code: { type: String },
   verdicts: { type: [Number], default: [] },
   status: { type: Number, required: true },
+  errorMessage: { type: String },
 });
 
 const Submission = mongoose.model("Submission", submissionSchema);

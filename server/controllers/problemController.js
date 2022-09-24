@@ -157,22 +157,49 @@ export const submit = async (req, res) => {
       .status(404)
       .json({ message: "Please Enter all required fields!" });
 
-  const problem = await Problem.findById(problemId);
+  try {
+    const problem = await Problem.findById(problemId);
 
-  if (!problem)
-    return res.status(404).json({ message: "No problem with the id!" });
+    if (!problem)
+      return res.status(404).json({ message: "No problem with the id!" });
 
-  res.send();
+    const { timeLimit, memoryLimit, mainTests } = problem;
+    const timeStamp = Math.floor(Date.now() / 1000);
 
-  // const newSubmission = new Submission({
-  //   user: userId,
-  //   problem: problemId,
-  //   language,
-  //   code,
-  //   status: 0,
-  // });
+    const { compilation, verdicts, errorMessage } = judge({
+      fileName: `${userId}_${timeStamp}`,
+      language,
+      code,
+      timeLimit,
+      memoryLimit,
+      mainTests,
+    });
 
-  // await newSubmission.save();
+    let status = 4;
 
-  // res.status(201).json(newSubmission);
+    if (compilation === 0) {
+      for (let i = 0; i < verdicts.length; i++) {
+        if (verdicts[i] !== 4) {
+          status = verdicts[i];
+          break;
+        }
+      }
+    } else status = 1;
+
+    const newSubmission = new Submission({
+      user: userId,
+      problem: problemId,
+      language,
+      code,
+      status,
+      verdicts,
+      errorMessage,
+    });
+
+    await newSubmission.save();
+
+    res.status(201).json(newSubmission);
+  } catch (err) {
+    res.staus(404).json({ message: err.message });
+  }
 };
