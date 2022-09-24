@@ -1,6 +1,6 @@
 import Problem from "../models/problemModel.js";
 import Submission from "../models/submissionModel.js";
-import { judge } from "../judge/judge.js";
+import { judge } from "../Judge/judge.js";
 
 export const getAll = async (req, res) => {
   const { search, tags, difficulty, orderBy, order, page, limit } = req.query;
