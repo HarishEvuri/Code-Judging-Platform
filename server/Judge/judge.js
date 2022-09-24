@@ -36,6 +36,7 @@ export const judge = async (data) => {
     await exec(`rm ./Judge/tmp/${fileName}*`);
     return { compilation: 0, verdicts };
   } catch (error) {
+    // console.log(error);
     await exec(`rm ./Judge/tmp/${fileName}*`);
 
     return {

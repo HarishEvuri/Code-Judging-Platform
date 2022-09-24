@@ -15,5 +15,9 @@ RUN npm install
 # Bundle app source
 COPY . .
 
+RUN sed -i -e 's/\r$//' ./Judge/scripts/compile_script.sh
+RUN sed -i -e 's/\r$//' ./Judge/scripts/runner_script.sh
+RUN sed -i -e 's/\r$//' ./Judge/scripts/default_test_script.sh
+
 EXPOSE 5000
 CMD [ "node", "index.js" ]
