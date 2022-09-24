@@ -166,7 +166,7 @@ export const submit = async (req, res) => {
     const { timeLimit, memoryLimit, mainTests } = problem;
     const timeStamp = Math.floor(Date.now() / 1000);
 
-    const { compilation, verdicts, errorMessage } = judge({
+    const { compilation, verdicts, errorMessage } = await judge({
       fileName: `${userId}_${timeStamp}`,
       language,
       code,
