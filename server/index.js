@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 
 import userRoutes from "./routes/userRoutes.js";
 import problemRoutes from "./routes/problemRoutes.js";
+import submissionRoutes from "./routes/submissionRoutes.js";
 
 dotenv.config();
 
@@ -23,6 +24,7 @@ app.use(
 
 app.use("/user", userRoutes);
 app.use("/problem", problemRoutes);
+app.use("/submission", submissionRoutes);
 
 app.listen(PORT, () => console.log("Server is listening at Port : ", PORT));
 

@@ -1,13 +1,24 @@
 import mongoose from "mongoose";
+const { Schema } = mongoose;
 
-const submissionSchema = new mongoose.Schema({
-  userId: { type: String, required: true, index: true },
-  problemId: { type: String, required: true, index: true },
+const submissionSchema = new Schema({
+  user: {
+    type: Schema.Types.ObjectId,
+    required: true,
+    index: true,
+    ref: "User",
+  },
+  problem: {
+    type: Schema.Types.ObjectId,
+    required: true,
+    index: true,
+    ref: "Problem",
+  },
   language: { type: Number, required: true },
   code: { type: String },
   verdicts: { type: [Number], default: [] },
   status: { type: Number, required: true },
 });
 
-const Submission = mongoose.Model("Submission", submissionSchema);
+const Submission = mongoose.model("Submission", submissionSchema);
 export default Submission;
