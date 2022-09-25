@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.css": "/static/css/main.31d6cfe0.css",
-    "main.js": "/static/js/main.d78a137f.js",
-    "static/media/googleLogo.svg": "/static/media/googleLogo.621b694912d9d6b89479794cd196c809.svg",
-    "index.html": "/index.html",
-    "static/media/githubLogo2.svg": "/static/media/githubLogo2.1e9279192cefd38c4bb816b7c9ce5043.svg",
-    "static/media/githubLogo.svg": "/static/media/githubLogo.64d9c4330b3990c06682fe68e6315da1.svg",
-    "static/media/linkedinLogo.svg": "/static/media/linkedinLogo.59f8d32febbb5d3c6c0d8579039dfdcd.svg",
-    "static/media/facebookLogo.svg": "/static/media/facebookLogo.4f1deab667eb1d13c4ccf6d8c05b15e0.svg",
-    "main.d78a137f.js.map": "/static/js/main.d78a137f.js.map"
+    "main.css": "/Code-Judging-Platform/static/css/main.31d6cfe0.css",
+    "main.js": "/Code-Judging-Platform/static/js/main.71d903c3.js",
+    "static/media/googleLogo.svg": "/Code-Judging-Platform/static/media/googleLogo.621b694912d9d6b89479794cd196c809.svg",
+    "index.html": "/Code-Judging-Platform/index.html",
+    "static/media/githubLogo2.svg": "/Code-Judging-Platform/static/media/githubLogo2.1e9279192cefd38c4bb816b7c9ce5043.svg",
+    "static/media/githubLogo.svg": "/Code-Judging-Platform/static/media/githubLogo.64d9c4330b3990c06682fe68e6315da1.svg",
+    "static/media/linkedinLogo.svg": "/Code-Judging-Platform/static/media/linkedinLogo.59f8d32febbb5d3c6c0d8579039dfdcd.svg",
+    "static/media/facebookLogo.svg": "/Code-Judging-Platform/static/media/facebookLogo.4f1deab667eb1d13c4ccf6d8c05b15e0.svg",
+    "main.71d903c3.js.map": "/Code-Judging-Platform/static/js/main.71d903c3.js.map"
   },
   "entrypoints": [
     "static/css/main.31d6cfe0.css",
-    "static/js/main.d78a137f.js"
+    "static/js/main.71d903c3.js"
   ]
 }
